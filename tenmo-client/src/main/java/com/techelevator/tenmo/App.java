@@ -1,9 +1,20 @@
 package com.techelevator.tenmo;
 
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+import io.cucumber.java.it.Data;
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.web.client.RestTemplate;
+
+import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.util.Scanner;
 
 public class App {
 
@@ -13,6 +24,9 @@ public class App {
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
 
     private AuthenticatedUser currentUser;
+
+    private final RestTemplate restTemplate = new RestTemplate();
+
 
     public static void main(String[] args) {
         App app = new App();
@@ -26,6 +40,7 @@ public class App {
             mainMenu();
         }
     }
+
     private void loginMenu() {
         int menuSelection = -1;
         while (menuSelection != 0 && currentUser == null) {
@@ -85,8 +100,13 @@ public class App {
     }
 
 	private void viewCurrentBalance() {
-		// TODO Auto-generated method stub
-		
+        long userID = currentUser.getUser().getId();
+
+        Account account = restTemplate.getForObject("http://localhost:8080/account?userid=" +userID, Account.class);
+
+        BigDecimal balance = account.getBalance();
+
+        System.out.println("Your current account balance is: " + balance);
 	}
 
 	private void viewTransferHistory() {
@@ -101,8 +121,11 @@ public class App {
 
 	private void sendBucks() {
 		// TODO Auto-generated method stub
-		
-	}
+
+
+
+
+    }
 
 	private void requestBucks() {
 		// TODO Auto-generated method stub
