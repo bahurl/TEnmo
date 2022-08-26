@@ -2,6 +2,7 @@ package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Scanner;
 
 public class App {
@@ -120,7 +122,13 @@ public class App {
 	}
 
 	private void sendBucks() {
-		// TODO Auto-generated method stub
+
+        User[] users = restTemplate.getForObject("http://localhost:8080/users", User[].class);
+
+        consoleService.getAccountUsers(users);
+
+        int recipientID = consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel):");
+        BigDecimal sentAmount = consoleService.promptForBigDecimal("Enter amount:");
 
 
 

@@ -22,10 +22,11 @@ public class JdbcUserDao implements UserDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-//    //new method
-//    public User findUserByID(long id) {
-//        String sql = "SELECT user_id, username "
-//    }
+    //new method
+    public User findUserByID(long id) {
+        String sql = "SELECT user_id, username, password_hash FROM tenmo_user WHERE user_id = ?;";
+
+    }
 
     @Override
     public int findIdByUsername(String username) {
