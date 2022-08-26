@@ -83,7 +83,7 @@ public class App {
             consoleService.printMainMenu();
             menuSelection = consoleService.promptForMenuSelection("Please choose an option: ");
             if (menuSelection == 1) {
-                viewCurrentBalance();
+                System.out.println("Your current account balance is: " +getCurrentBalance());
             } else if (menuSelection == 2) {
                 viewTransferHistory();
             } else if (menuSelection == 3) {
@@ -101,14 +101,12 @@ public class App {
         }
     }
 
-	private void viewCurrentBalance() {
+	private BigDecimal getCurrentBalance() {
         long userID = currentUser.getUser().getId();
 
         Account account = restTemplate.getForObject("http://localhost:8080/account?userid=" +userID, Account.class);
 
-        BigDecimal balance = account.getBalance();
-
-        System.out.println("Your current account balance is: " + balance);
+        return account.getBalance();
 	}
 
 	private void viewTransferHistory() {
@@ -122,20 +120,55 @@ public class App {
 	}
 
 	private void sendBucks() {
-
         User[] users = restTemplate.getForObject("http://localhost:8080/users", User[].class);
 
-        consoleService.getOtherAccountUsers(users, currentUser.getUser().getId());
+        List<User> otherUsers = consoleService.getOtherAccountUsers(users, currentUser.getUser().getId());
 
-        int recipientID = consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel):");
+        //chooses valid user to send money to
+        User selectedUser = null;
+        while(selectedUser == null) {
+            int recipientID = consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel):");
 
+            if(recipientID == 0) return;
 
-        BigDecimal sentAmount = consoleService.promptForBigDecimal("Enter amount:");
+            for(User user: otherUsers) {
+                if(user.getId() == recipientID) {
+                    selectedUser = user;
+                    break;
+                }
+            }
 
-        
+            if(selectedUser == null) {
+                System.out.println("Invalid selection");
+            }
+        }
 
+        //chooses valid amount of money to send
+        BigDecimal sentAmount = null;
+        while(sentAmount == null) {
+            BigDecimal amount = consoleService.promptForBigDecimal("Enter amount:");
 
+            //amount has to be less than or equal to balance and greater than 0
+            if(amount.compareTo(getCurrentBalance()) <= 0 && amount.compareTo(BigDecimal.ZERO) > 0) {
+                sentAmount = amount;
+            }
 
+            if(sentAmount == null) {
+                System.out.println("Enter a valid amount for this transaction");
+            }
+        }
+
+        Account currentUserAccount = restTemplate.getForObject("http://localhost:8080/account?userid=" +currentUser.getUser().getId(), Account.class);
+
+        Account sentUserAccount = restTemplate.getForObject("http://localhost:8080/account?userid=" +currentUser.getUser().getId(), Account.class);
+
+        Long transactionId = restTemplate.getForObject("http://localhost:8080/send?amount="+sentAmount+"&sendid="+currentUserAccount.getId()+"&receiveid="+sentUserAccount.getId(), Long.class);
+
+        if(transactionId != null) {
+            System.out.println("Transaction was a success!");
+        } else {
+            System.out.println("Transaction error");
+        }
     }
 
 	private void requestBucks() {

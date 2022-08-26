@@ -5,6 +5,7 @@ import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -90,7 +91,10 @@ public class ConsoleService {
         System.out.println("An error occurred. Check the log for details.");
     }
 
-    public void getOtherAccountUsers(User[] users, long currentUserId) {
+    //new method
+    public List<User> getOtherAccountUsers(User[] users, long currentUserId) {
+        List<User> otherUsers = new ArrayList<>();
+
         System.out.println("-------------------------------------------");
         System.out.println("Users");
         System.out.println("ID          Name");
@@ -100,9 +104,12 @@ public class ConsoleService {
             if(user.getId() == currentUserId) {
                 continue;
             }
+            otherUsers.add(user);
             System.out.println(user.getId()+"        "+user.getUsername());
         }
         System.out.println("---------");
+
+        return otherUsers;
     }
 
 }
