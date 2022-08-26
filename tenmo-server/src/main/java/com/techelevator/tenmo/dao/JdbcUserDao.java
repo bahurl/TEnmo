@@ -23,9 +23,15 @@ public class JdbcUserDao implements UserDao {
     }
 
     //new method
+    @Override
     public User findUserByID(long id) {
+        User user = null;
         String sql = "SELECT user_id, username, password_hash FROM tenmo_user WHERE user_id = ?;";
-
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, id);
+        if(result.next()) {
+            user = mapRowToUser(result);
+        }
+        return user;
     }
 
     @Override

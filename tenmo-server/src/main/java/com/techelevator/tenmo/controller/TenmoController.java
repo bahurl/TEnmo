@@ -32,9 +32,10 @@ public class TenmoController {
         return userDao.findAll();
     }
 
-    @GetMapping(value = "/user/{id}")
-    public User findUserByID(@PathVariable long id) {
-
+    //url: http://localhost:8080/user?userid=1001
+    @GetMapping(value = "/user")
+    public User findUserByID(@RequestParam long userid) {
+        return userDao.findUserByID(userid);
     }
 
 

@@ -90,12 +90,16 @@ public class ConsoleService {
         System.out.println("An error occurred. Check the log for details.");
     }
 
-    public void getAccountUsers(User[] users) {
+    public void getOtherAccountUsers(User[] users, long currentUserId) {
         System.out.println("-------------------------------------------");
         System.out.println("Users");
         System.out.println("ID          Name");
         System.out.println("-------------------------------------------");
         for(User user: users) {
+            //removes current user from list
+            if(user.getId() == currentUserId) {
+                continue;
+            }
             System.out.println(user.getId()+"        "+user.getUsername());
         }
         System.out.println("---------");

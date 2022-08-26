@@ -125,11 +125,14 @@ public class App {
 
         User[] users = restTemplate.getForObject("http://localhost:8080/users", User[].class);
 
-        consoleService.getAccountUsers(users);
+        consoleService.getOtherAccountUsers(users, currentUser.getUser().getId());
 
         int recipientID = consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel):");
+
+
         BigDecimal sentAmount = consoleService.promptForBigDecimal("Enter amount:");
 
+        
 
 
 
