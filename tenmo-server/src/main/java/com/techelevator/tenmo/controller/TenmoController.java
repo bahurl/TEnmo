@@ -45,7 +45,4 @@ public class TenmoController {
     public Long sendMoney(@RequestParam BigDecimal amount, @RequestParam Long sendid, @RequestParam Long receiveid) {
         return transferDao.sendMoney(amount, sendid, receiveid);
     }
-
-
-
 }

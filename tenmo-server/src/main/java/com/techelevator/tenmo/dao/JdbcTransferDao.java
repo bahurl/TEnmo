@@ -27,29 +27,16 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     @Transactional
     public Long sendMoney(BigDecimal amount, Long sendId, Long receiveId) {
-
-//        String sql = "BEGIN TRANSACTION;" +
-//                "UPDATE account SET balance = balance - ? WHERE account_number = ?;" +
-//                "UPDATE account SET balance = balance + ? WHERE account_number = ?;" +
-//                "INSERT INTO transfer (tranfer_type_id, transfer_status_id, account_from, account_to, amount) VALUES (2, 2, ?, ?, ?);" +
-//                "COMMIT;";
-//
-//        try {
-//            jdbcTemplate.update(sql, amount, sendId, receiveId, sendId, receiveId, amount);
-//        } catch(DataAccessException e) {
-//            System.out.println(e.getMessage());
-//        }
-
         try {
-            String firstAccountsql = "UPDATE account SET balance = balance - ? WHERE account_number = ?;";
+            String firstAccountsql = "UPDATE account SET balance = balance - ? WHERE account_id = ?;";
 
             jdbcTemplate.update(firstAccountsql, amount, sendId);
 
-            String secondAccountSql = "UPDATE account SET balance = balance + ? WHERE account_number = ?;";
+            String secondAccountSql = "UPDATE account SET balance = balance + ? WHERE account_id = ?;";
 
             jdbcTemplate.update(secondAccountSql, amount, receiveId);
 
-            String transferSql = "INSERT INTO transfer (tranfer_type_id, transfer_status_id, account_from, account_to, amount) VALUES (2, 2, ?, ?, ?) RETURNING transfer_id;";
+            String transferSql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) VALUES (2, 2, ?, ?, ?) RETURNING transfer_id;";
 
             return jdbcTemplate.queryForObject(transferSql, Long.class, sendId, receiveId, amount);
 

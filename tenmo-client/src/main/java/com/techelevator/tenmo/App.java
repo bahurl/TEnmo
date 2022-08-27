@@ -158,9 +158,10 @@ public class App {
             }
         }
 
-        Account currentUserAccount = restTemplate.getForObject("http://localhost:8080/account?userid=" +currentUser.getUser().getId(), Account.class);
 
-        Account sentUserAccount = restTemplate.getForObject("http://localhost:8080/account?userid=" +currentUser.getUser().getId(), Account.class);
+        Account currentUserAccount = restTemplate.getForObject("http://localhost:8080/account?userid=" +currentUser.getUser().getId(), Account.class);
+        Account sentUserAccount = restTemplate.getForObject("http://localhost:8080/account?userid=" +selectedUser.getId(), Account.class);
+
 
         Long transactionId = restTemplate.getForObject("http://localhost:8080/send?amount="+sentAmount+"&sendid="+currentUserAccount.getId()+"&receiveid="+sentUserAccount.getId(), Long.class);
 
