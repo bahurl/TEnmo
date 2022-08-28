@@ -33,6 +33,12 @@ public class JdbcUserDao implements UserDao {
         }
         return user;
     }
+    //new method
+    public String findUserNameByAccountId(long accountId) {
+        String sql = "select username from tenmo_user join account on tenmo_user.user_id = account.user_id where account_id = ?;";
+
+        return jdbcTemplate.queryForObject(sql, String.class, accountId);
+    }
 
     @Override
     public int findIdByUsername(String username) {

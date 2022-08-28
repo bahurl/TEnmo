@@ -1,9 +1,6 @@
 package com.techelevator.tenmo;
 
-import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.AuthenticatedUser;
-import com.techelevator.tenmo.model.User;
-import com.techelevator.tenmo.model.UserCredentials;
+import com.techelevator.tenmo.model.*;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
 import io.cucumber.java.it.Data;
@@ -110,7 +107,16 @@ public class App {
 	}
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
+        Account currentUserAccount = restTemplate.getForObject("http://localhost:8080/account?userid=" +currentUser.getUser().getId(), Account.class);
+
+        Transfer[] transfers = restTemplate.getForObject("http://localhost:8080/transfers/" +currentUserAccount.getId(), Transfer[].class);
+
+        consoleService.getTransfers(transfers, currentUserAccount.getId());
+
+
+
+
+
 		
 	}
 

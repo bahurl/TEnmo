@@ -1,8 +1,10 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.Scanner;
 public class ConsoleService {
 
     private final Scanner scanner = new Scanner(System.in);
+    private final RestTemplate restTemplate = new RestTemplate();
 
     public int promptForMenuSelection(String prompt) {
         int menuSelection;
@@ -110,6 +113,67 @@ public class ConsoleService {
         System.out.println("---------");
 
         return otherUsers;
+    }
+
+    public void getTransfers(Transfer[] transfers, Long accountId) {
+        System.out.println("-------------------------------------------");
+        System.out.println("Transfers");
+        System.out.println("ID          From/To                 Amount");
+        System.out.println("-------------------------------------------");
+        for(Transfer transfer: transfers) {
+            if(transfer.getAccountFrom().equals(accountId)) { //if user is sender
+
+                String receiverUsername = restTemplate.getForObject("http://localhost:8080/username?accountid=" +transfer.getAccountTo(), String.class);
+                System.out.println(transfer.getId()+"        To: "+receiverUsername+"          $"+transfer.getAmount());
+
+            } else { //if user is receiver
+
+                String senderUsername = restTemplate.getForObject("http://localhost:8080/username?accountid=" +transfer.getAccountFrom(), String.class);
+                System.out.println(transfer.getId()+"        From: "+senderUsername+"          $"+transfer.getAmount());
+            }
+        }
+        System.out.println("---------");
+
+        //get valid transfer ID
+        Transfer chosenTransfer = null;
+        while(chosenTransfer == null) {
+            int id = promptForInt("Please enter transfer ID to view details (0 to cancel):");
+
+            if(id == 0) {
+                return;
+            }
+
+            for(Transfer transfer: transfers) {
+                if(transfer.getId() == id) {
+                    chosenTransfer = transfer;
+                    break;
+                }
+            }
+
+            if(chosenTransfer == null) {
+                System.out.println("Invalid selection");
+            }
+        }
+
+        getTransferById(chosenTransfer);
+    }
+
+    public void getTransferById(Transfer transfer) {
+        String sender = restTemplate.getForObject("http://localhost:8080/username?accountid=" +transfer.getAccountFrom(), String.class);
+        String receiver = restTemplate.getForObject("http://localhost:8080/username?accountid=" +transfer.getAccountTo(), String.class);
+
+        String type = restTemplate.getForObject("http://localhost:8080/type/" +transfer.getTransferTypeId(), String.class);
+        String status = restTemplate.getForObject("http://localhost:8080/status/" +transfer.getTransferStatusId(), String.class);
+
+        System.out.println("--------------------------------------------");
+        System.out.println("Transfer Details");
+        System.out.println("--------------------------------------------");
+        System.out.println("Id: "+transfer.getId());
+        System.out.println("From: " +sender);
+        System.out.println("To: " +receiver);
+        System.out.println("Type: " +type);
+        System.out.println("Status: " +status);
+        System.out.println("Amount: $" +transfer.getAmount());
     }
 
 }
