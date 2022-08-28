@@ -83,12 +83,12 @@ public class App {
                 System.out.println("Your current account balance is: " +getCurrentBalance());
             } else if (menuSelection == 2) {
                 viewTransferHistory();
+                //removing optional cases from the menu selection process
+    //        } else if (menuSelection == 3) { viewPendingRequests();
             } else if (menuSelection == 3) {
-                viewPendingRequests();
-            } else if (menuSelection == 4) {
                 sendBucks();
-            } else if (menuSelection == 5) {
-                requestBucks();
+                //removing optional cases from the menu selection process
+                //       } else if (menuSelection == 5) { requestBucks();
             } else if (menuSelection == 0) {
                 continue;
             } else {
