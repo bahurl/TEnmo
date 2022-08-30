@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Component
 public class JdbcAccountDao implements AccountDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

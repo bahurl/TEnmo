@@ -90,6 +90,9 @@ public class App {
                 //removing optional cases from the menu selection process
                 //       } else if (menuSelection == 5) { requestBucks();
             } else if (menuSelection == 0) {
+                System.out.println("\n" +
+                        "▀█▀ █░█ ▄▀█ █▄░█ █▄▀ █▀   █▀▀ █▀█ █▀█   █░█ █▀ █ █▄░█ █▀▀   ▀█▀ █▀▀ █▄░█ █▀▄▀█ █▀█ █\n" +
+                        "░█░ █▀█ █▀█ █░▀█ █░█ ▄█   █▀░ █▄█ █▀▄   █▄█ ▄█ █ █░▀█ █▄█   ░█░ ██▄ █░▀█ █░▀░█ █▄█ ▄ !");
                 continue;
             } else {
                 System.out.println("Invalid Selection");

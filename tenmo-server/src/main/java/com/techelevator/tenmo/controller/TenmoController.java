@@ -14,9 +14,9 @@ import java.util.List;
 @RestController
 public class TenmoController {
 
-    private AccountDao accountDao;
-    private UserDao userDao;
-    private TransferDao transferDao;
+    private final AccountDao accountDao;
+    private final UserDao userDao;
+    private final TransferDao transferDao;
 
     public TenmoController(AccountDao accountDao, UserDao userDao, TransferDao transferDao) {
         this.accountDao = accountDao;
